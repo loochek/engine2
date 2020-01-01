@@ -8,6 +8,12 @@
 class ObjectController
 {
 public:
+	static ObjectController& getInstance()
+	{
+		static ObjectController singleton;
+		return singleton;
+	}
+
 	Entity createEntity()
 	{
 		return mEntityManager.create();
@@ -80,4 +86,9 @@ private:
 	{
 		mSystemManager.setSignature(signature);
 	}
+
+	ObjectController() {}                                      // Private constructor
+	~ObjectController() {}
+	ObjectController(const ObjectController&);                 // Prevent copy-construction
+	ObjectController& operator=(const ObjectController&);      // Prevent assignment
 };

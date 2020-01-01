@@ -45,6 +45,12 @@ typedef std::list<HandlerFunctionBase*> HandlerList;
 class EventDispatcher
 {
 public:
+	static EventDispatcher& getInstance()
+	{
+		static EventDispatcher singleton;
+		return singleton;
+	}
+
 	template<typename EventType>
 	void emit(EventType* event)
 	{
@@ -71,4 +77,9 @@ public:
 
 private:
 	std::map<std::type_index, std::list<HandlerFunctionBase*>*> mSubscriptions;
+
+	EventDispatcher() {}                                      // Private constructor
+	~EventDispatcher() {}
+	EventDispatcher(const EventDispatcher&);                 // Prevent copy-construction
+	EventDispatcher& operator=(const EventDispatcher&);      // Prevent assignment
 };

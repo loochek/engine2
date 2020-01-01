@@ -8,8 +8,7 @@
 class Mesh
 {
 public:
-	Mesh(std::vector<glm::vec3> &vertices);
-
+	void loadVertices(std::vector<glm::vec3>& vertices);
 	void draw(Shader &shader);
 
 private:

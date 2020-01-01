@@ -1,6 +1,6 @@
 #include "Mesh.h"
 
-Mesh::Mesh(std::vector<glm::vec3> &vertices)
+void Mesh::loadVertices(std::vector<glm::vec3>& vertices)
 {
 	glGenVertexArrays(1, &mVAO);
 	glGenBuffers(1, &mVBO);

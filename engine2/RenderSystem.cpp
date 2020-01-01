@@ -1,9 +1,10 @@
 #include "RenderSystem.h"
 #include <iostream>
+#include "ObjectController.h"
+#include "Components.h"
 
-int RenderSystem::init(EventDispatcher* eventDispatcher)
+int RenderSystem::init()
 {
-    mEventDispatcher = eventDispatcher;
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -23,16 +24,22 @@ int RenderSystem::init(EventDispatcher* eventDispatcher)
         std::cout << "[RenderSystem] Failed to initialize GLAD" << std::endl;
         return -1;
     }
+
+    shader = new Shader("shaders/shader.vert", "shaders/shader.frag");
     return 0;
 }
 
 void RenderSystem::update(GLfloat elapsedTime)
 {
     if (glfwWindowShouldClose(mWindow))
-        mEventDispatcher->emit(new ApplicationTerminateEvent());
+        EventDispatcher::getInstance().emit(new ApplicationTerminateEvent());
+
     glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT);
-    std::cout << "FPS: " << 1.f / elapsedTime << std::endl;
+
+    for (auto i : mEntities)
+        ObjectController::getInstance().getComponent<MeshComponent>(i).cMesh.draw(*shader);
+
     glfwSwapBuffers(mWindow);
     glfwPollEvents();
 }

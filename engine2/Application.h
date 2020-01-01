@@ -3,6 +3,7 @@
 #include "EventDispatcher.h"
 #include "ObjectController.h"
 #include "RenderSystem.h"
+#include "Components.h"
 
 class Application
 {
@@ -12,8 +13,6 @@ public:
 	void terminate();
 
 private:
-	ObjectController mObjectController;
-	EventDispatcher mEventDispatcher;
 	std::shared_ptr<RenderSystem> mRenderSystem;
 	bool mShouldClose = false;
 	void onApplicationTerminateEvent(ApplicationTerminateEvent* event);

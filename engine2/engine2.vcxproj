@@ -175,6 +175,7 @@
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="EventDispatcher.h" />
+    <ClInclude Include="Components.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="ObjectController.h" />
     <ClInclude Include="RenderSystem.h" />
