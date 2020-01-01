@@ -16,7 +16,8 @@ public:
 
 	GLuint program;
 
-	void use();
+	void bind();
+	static void unbind();
 	void setFloat(const GLchar* uniform, GLfloat value);
 	void setInt(const GLchar* uniform, GLint value);
 	void setVec3f(const GLchar* uniform, GLfloat value1, GLfloat value2, GLfloat value3);

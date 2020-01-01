@@ -61,9 +61,14 @@ Shader::Shader(const std::string vertexPath, const std::string fragmentPath)
 	glDeleteShader(fragment);
 }
 
-void Shader::use()
+void Shader::bind()
 {
 	glUseProgram(this->program);
+}
+
+void Shader::unbind()
+{
+	glUseProgram(0);
 }
 
 void Shader::setFloat(const GLchar* uniform, GLfloat value)

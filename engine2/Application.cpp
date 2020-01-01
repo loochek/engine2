@@ -19,9 +19,12 @@ int Application::init()
 
     Entity triangle = objectController.createEntity();
     std::vector<glm::vec3> vertices = {glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec3(0.5f, -0.5f, 0.0f), glm::vec3(0.0f,  0.5f, 0.0f)};
+    std::vector<glm::vec2> texCoords = { glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 0.0f), glm::vec2(0.5f, 1.0f) };
     objectController.addComponent(triangle, RenderableComponent());
     objectController.addComponent(triangle, MeshComponent());
-    objectController.getComponent<MeshComponent>(triangle).cMesh.loadVertices(vertices);
+    objectController.getComponent<MeshComponent>(triangle).cMesh.loadPositions(vertices);
+    objectController.getComponent<MeshComponent>(triangle).cMesh.loadTexCoords(texCoords);
+    objectController.getComponent<MeshComponent>(triangle).cMesh.bake();
     return 0;
 }
 

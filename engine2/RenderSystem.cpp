@@ -26,6 +26,7 @@ int RenderSystem::init()
     }
 
     shader = new Shader("shaders/shader.vert", "shaders/shader.frag");
+    texture = new Texture("textures/wall.jpg");
     return 0;
 }
 
@@ -37,9 +38,10 @@ void RenderSystem::update(GLfloat elapsedTime)
     glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
+    texture->bind(0);
     for (auto i : mEntities)
         ObjectController::getInstance().getComponent<MeshComponent>(i).cMesh.draw(*shader);
-
+    Texture::unbind(0);
     glfwSwapBuffers(mWindow);
     glfwPollEvents();
 }

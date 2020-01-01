@@ -5,6 +5,7 @@
 #include "System.h"
 #include "EventDispatcher.h"
 #include "Shader.h"
+#include "Texture.h"
 
 class RenderSystem : public System
 {
@@ -15,5 +16,6 @@ public:
 
 private:
 	GLFWwindow* mWindow;
-	Shader *shader;
+	Shader* shader;
+	Texture* texture;
 };

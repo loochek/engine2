@@ -8,10 +8,15 @@
 class Mesh
 {
 public:
-	void loadVertices(std::vector<glm::vec3>& vertices);
+	void loadPositions(std::vector<glm::vec3>& positions);
+	void loadTexCoords(std::vector<glm::vec2>& texCoords);
+	void loadNormals(std::vector<glm::vec3>& normals);
+	void bake();
 	void draw(Shader &shader);
 
 private:
 	GLuint mVBO, mVAO;
-	GLuint mVerticesCount;
+	std::vector<glm::vec3> mPositions;
+	std::vector<glm::vec2> mTexCoords;
+	std::vector<glm::vec3> mNormals;
 };
