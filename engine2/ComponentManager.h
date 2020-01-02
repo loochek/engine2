@@ -32,8 +32,13 @@ public:
 	template<typename T>
 	T& getComponent(Entity entity)
 	{
-
 		return getComponentStore<T>()->get(entity);
+	}
+
+	template<typename T>
+	bool hasComponent(Entity entity)
+	{
+		return getComponentStore<T>()->hasComponent(entity);
 	}
 
 	template<typename T>

@@ -63,6 +63,12 @@ public:
 	}
 
 	template<typename T>
+	bool hasComponent(Entity entity)
+	{
+		return mComponentManager.hasComponent<T>(entity);
+	}
+
+	template<typename T>
 	std::shared_ptr<T> registerSystem()
 	{
 		return mSystemManager.registerSystem<T>();

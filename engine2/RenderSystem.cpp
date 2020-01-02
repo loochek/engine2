@@ -5,7 +5,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "ResourceManager.h"
 
-int RenderSystem::init()
+GLFWwindow* RenderSystem::init()
 {
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -16,7 +16,7 @@ int RenderSystem::init()
     if (!mWindow)
     {
         std::cout << "[RenderSystem] Failed to create GLFW window" << std::endl;
-        return -1;
+        return nullptr;
     }
 
     glfwMakeContextCurrent(mWindow);
@@ -24,14 +24,12 @@ int RenderSystem::init()
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
         std::cout << "[RenderSystem] Failed to initialize GLAD" << std::endl;
-        return -1;
+        return nullptr;
     }
 
     glEnable(GL_DEPTH_TEST);
-
-    ResourceManager::getInstance().getShader("shader");
     texture = new Texture("textures/emo.jpg");
-    return 0;
+    return mWindow;
 }
 
 void RenderSystem::update(GLfloat elapsedTime)
@@ -47,13 +45,18 @@ void RenderSystem::update(GLfloat elapsedTime)
 
     texture->bind(0);
 
+    auto& objectController = ObjectController::getInstance();
+
     for (auto i : mEntities)
     {
         glm::mat4 trans(1.0f);
-        auto& transform = ObjectController::getInstance().getComponent<TransformComponent>(i);
-        trans = glm::scale(trans, transform.scale);
-        trans = glm::rotate(trans, transform.rotationAngle, transform.rotationAxis);
-        trans = glm::translate(trans, transform.translation);
+        if (objectController.hasComponent<TransformComponent>(i))
+        {
+            auto& transform = ObjectController::getInstance().getComponent<TransformComponent>(i);
+            trans = glm::scale(trans, transform.scale);
+            trans = glm::rotate(trans, transform.rotationAngle, transform.rotationAxis);
+            trans = glm::translate(trans, transform.translation);
+        }
         auto shader = ResourceManager::getInstance().getShader("shader");
         shader->bind();
         shader->setMat4f("transform", trans);

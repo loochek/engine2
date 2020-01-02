@@ -3,6 +3,7 @@
 #include "EventDispatcher.h"
 #include "ObjectController.h"
 #include "RenderSystem.h"
+#include "InputSystem.h"
 #include "Components.h"
 
 class Application
@@ -13,7 +14,10 @@ public:
 	void terminate();
 
 private:
+	GLFWwindow* mWindow;
 	std::shared_ptr<RenderSystem> mRenderSystem;
+	std::shared_ptr<InputSystem> mInputSystem;
 	bool mShouldClose = false;
 	void onApplicationTerminateEvent(ApplicationTerminateEvent* event);
+	void onKeyPressed(KeyPressedEvent* event);
 };

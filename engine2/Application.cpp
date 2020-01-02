@@ -7,6 +7,9 @@
 
 int Application::init()
 {
+    EventDispatcher::getInstance().subscribe(this, &Application::onApplicationTerminateEvent);
+    EventDispatcher::getInstance().subscribe(this, &Application::onKeyPressed);
+
     ObjectController& objectController = ObjectController::getInstance();
 
     objectController.registerComponent<MeshComponent>();
@@ -15,10 +18,15 @@ int Application::init()
 
     mRenderSystem = objectController.registerSystem<RenderSystem>();
     objectController.setSystemRequirement<RenderSystem, RenderableComponent>(true);
-    if (mRenderSystem->init())
+    mWindow = mRenderSystem->init();
+    if (!mWindow)
         return -1;
 
-    EventDispatcher::getInstance().subscribe(this, &Application::onApplicationTerminateEvent);
+    mInputSystem = objectController.registerSystem<InputSystem>();
+
+    if (mInputSystem->init(mWindow))
+        return -1;
+
     std::vector<glm::vec3> vertices = {
     {-0.5f, -0.5f, -0.5f},
     {0.5f, -0.5f, -0.5f},
@@ -126,10 +134,11 @@ int Application::init()
         Entity ent = objectController.createEntity();
         objectController.addComponent(ent, RenderableComponent());
         objectController.addComponent(ent, MeshComponent());
-        objectController.addComponent(ent, TransformComponent());
         objectController.getComponent<MeshComponent>(ent).cMesh = mesh;
+        objectController.addComponent(ent, TransformComponent());
         objectController.getComponent<TransformComponent>(ent).translation = cubePositions[i];
         objectController.getComponent<TransformComponent>(ent).rotationAxis = glm::vec3(1.0f, 1.0f, 1.0f);
+        
     }
     return 0;
 }
@@ -148,6 +157,7 @@ int Application::run()
     {
         auto elapsedTime = std::chrono::duration_cast<std::chrono::nanoseconds>(clock::now() - lastTime);
         lastTime = clock::now();
+        mInputSystem->update(elapsedTime.count() / 1e9);
         mRenderSystem->update(elapsedTime.count() / 1e9);
     }
     terminate();
@@ -162,4 +172,9 @@ void Application::terminate()
 void Application::onApplicationTerminateEvent(ApplicationTerminateEvent* event)
 {
     mShouldClose = true;
+}
+
+void Application::onKeyPressed(KeyPressedEvent* event)
+{
+    EventDispatcher::getInstance().emit(new ApplicationTerminateEvent());
 }

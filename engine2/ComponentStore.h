@@ -50,6 +50,11 @@ public:
 		return mComponents[mEntityToIndexMap[entity]];
 	}
 
+	bool hasComponent(Entity entity)
+	{
+		return mEntityToIndexMap.find(entity) != mEntityToIndexMap.end();
+	}
+
 	virtual void entityDestroyed(Entity entity) override
 	{
 		remove(entity);
