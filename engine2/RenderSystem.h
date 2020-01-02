@@ -16,6 +16,5 @@ public:
 
 private:
 	GLFWwindow* mWindow;
-	Shader* shader;
 	Texture* texture;
 };

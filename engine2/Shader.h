@@ -10,11 +10,18 @@
 class Shader
 {
 public:
-	Shader(const std::string vertexPath, const std::string fragmentPath);
+	// the trick to give resoures creation exclusive right to ResourceManager
+	class Token
+	{
+	private:
+		Token() {}
+		friend class ResourceManager;
+	};
+
+	Shader() = delete;
+	Shader(Token, const std::string& vertexPath, const std::string& fragmentPath);
 	Shader(const Shader&) = delete;
 	Shader& operator=(const Shader&) = delete;
-
-	GLuint program;
 
 	void bind();
 	static void unbind();
@@ -23,4 +30,7 @@ public:
 	void setVec3f(const GLchar* uniform, GLfloat value1, GLfloat value2, GLfloat value3);
 	void setVec3f(const GLchar* uniform, glm::vec3 vec);
 	void setMat4f(const GLchar* uniform, glm::mat4 mat);
+
+private:
+	GLuint program;
 };

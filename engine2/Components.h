@@ -8,5 +8,13 @@ struct RenderableComponent {};
 
 struct MeshComponent
 {
-	Mesh cMesh;
+	std::shared_ptr<Mesh> cMesh;
+};
+
+struct TransformComponent
+{
+	glm::vec3 translation;
+	glm::vec3 rotationAxis{ 1.0f, 0.0f, 0.0f };
+	GLfloat rotationAngle = 0.0f;
+	glm::vec3 scale{ 1.0f };
 };

@@ -2,6 +2,8 @@
 #include <iostream>
 #include "ObjectController.h"
 #include "Components.h"
+#include <glm/gtc/matrix_transform.hpp>
+#include "ResourceManager.h"
 
 int RenderSystem::init()
 {
@@ -25,8 +27,10 @@ int RenderSystem::init()
         return -1;
     }
 
-    shader = new Shader("shaders/shader.vert", "shaders/shader.frag");
-    texture = new Texture("textures/wall.jpg");
+    glEnable(GL_DEPTH_TEST);
+
+    ResourceManager::getInstance().getShader("shader");
+    texture = new Texture("textures/emo.jpg");
     return 0;
 }
 
@@ -35,13 +39,32 @@ void RenderSystem::update(GLfloat elapsedTime)
     if (glfwWindowShouldClose(mWindow))
         EventDispatcher::getInstance().emit(new ApplicationTerminateEvent());
 
+    //std::cout << "FPS: " << 1.f / elapsedTime << std::endl;
+    ObjectController::getInstance().getComponent<TransformComponent>(0).rotationAngle += glm::radians(100.f * elapsedTime);
+
     glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     texture->bind(0);
+
     for (auto i : mEntities)
-        ObjectController::getInstance().getComponent<MeshComponent>(i).cMesh.draw(*shader);
+    {
+        glm::mat4 trans(1.0f);
+        auto& transform = ObjectController::getInstance().getComponent<TransformComponent>(i);
+        trans = glm::scale(trans, transform.scale);
+        trans = glm::rotate(trans, transform.rotationAngle, transform.rotationAxis);
+        trans = glm::translate(trans, transform.translation);
+        auto shader = ResourceManager::getInstance().getShader("shader");
+        shader->bind();
+        shader->setMat4f("transform", trans);
+        shader->setMat4f("view", glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -3.0f)));
+        shader->setMat4f("projection", glm::perspective(45.0f, 800.f / 600.f, 0.1f, 100.0f));
+        Shader::unbind();
+        ObjectController::getInstance().getComponent<MeshComponent>(i).cMesh->draw(*shader);
+    }
+
     Texture::unbind(0);
+
     glfwSwapBuffers(mWindow);
     glfwPollEvents();
 }

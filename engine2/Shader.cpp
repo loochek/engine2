@@ -1,7 +1,7 @@
 #include "Shader.h"
 #include <glm/gtc/type_ptr.hpp>
 
-Shader::Shader(const std::string vertexPath, const std::string fragmentPath)
+Shader::Shader(Token, const std::string& vertexPath, const std::string& fragmentPath)
 {
 	std::ifstream vShaderFin;
 	std::ifstream fShaderFin;
