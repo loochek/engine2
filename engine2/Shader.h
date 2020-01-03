@@ -19,6 +19,7 @@ public:
 	};
 
 	Shader() = delete;
+	~Shader();
 	Shader(Token, const std::string& vertexPath, const std::string& fragmentPath);
 	Shader(const Shader&) = delete;
 	Shader& operator=(const Shader&) = delete;

@@ -18,6 +18,6 @@ private:
 	std::shared_ptr<RenderSystem> mRenderSystem;
 	std::shared_ptr<InputSystem> mInputSystem;
 	bool mShouldClose = false;
-	void onApplicationTerminateEvent(ApplicationTerminateEvent* event);
-	void onKeyPressed(KeyPressedEvent* event);
+	void onApplicationTerminateEvent(const ApplicationTerminateEvent& event);
+	void onKeyPressed(const KeyPressedEvent& event);
 };

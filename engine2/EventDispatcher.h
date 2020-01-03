@@ -10,27 +10,27 @@ class HandlerFunctionBase
 {
 public:
 	// Call the member function
-	void exec(Event* event)
+	void exec(const Event& event)
 	{
 		call(event);
 	}
 private:
 	// Implemented by MemberFunctionHandler
-	virtual void call(Event* event) = 0;
+	virtual void call(const Event& event) = 0;
 };
 
 template<class T, class EventType>
 class MemberFunctionHandler : public HandlerFunctionBase
 {
 public:
-	typedef void (T::* MemberFunction)(EventType*);
+	typedef void (T::* MemberFunction)(const EventType&);
 
 	MemberFunctionHandler(T* instance, MemberFunction memberFunction) : instance{ instance }, memberFunction{ memberFunction } {};
 
-	void call(Event* event)
+	void call(const Event& event)
 	{
 		// Cast event to the correct type and call member function
-		(instance->*memberFunction)(static_cast<EventType*>(event));
+		(instance->*memberFunction)(static_cast<const EventType&>(event));
 	}
 private:
 	// Pointer to class instance
@@ -52,7 +52,7 @@ public:
 	}
 
 	template<typename EventType>
-	void emit(EventType* event)
+	void emit(const EventType& event)
 	{
 		HandlerList* handlers = mSubscriptions[typeid(EventType)];
 		if (handlers == nullptr)
@@ -63,7 +63,7 @@ public:
 	}
 
 	template<class T, class EventType>
-	void subscribe(T* instance, void (T::* memberFunction)(EventType*))
+	void subscribe(T* instance, void (T::* memberFunction)(const EventType&))
 	{
 		HandlerList* handlers = mSubscriptions[typeid(EventType)];
 
@@ -79,7 +79,16 @@ private:
 	std::map<std::type_index, std::list<HandlerFunctionBase*>*> mSubscriptions;
 
 	EventDispatcher() {}                                      // Private constructor
-	~EventDispatcher() {}
+	~EventDispatcher()
+	{
+		for (auto events : mSubscriptions)
+		{
+			if (events.second)
+				for (auto handler : *events.second)
+					delete handler;
+			delete events.second;
+		}
+	}
 	EventDispatcher(const EventDispatcher&);                 // Prevent copy-construction
 	EventDispatcher& operator=(const EventDispatcher&);      // Prevent assignment
 };

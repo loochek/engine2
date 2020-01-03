@@ -26,7 +26,7 @@ public:
 	void draw(Shader &shader);
 
 private:
-	GLuint mVBO, mVAO;
+	GLuint mVBO{}, mVAO{};
 	std::vector<glm::vec3> mPositions;
 	std::vector<glm::vec2> mTexCoords;
 	std::vector<glm::vec3> mNormals;

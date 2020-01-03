@@ -27,6 +27,11 @@ Texture::Texture(const char* loadPath) : Texture()
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
+Texture::~Texture()
+{
+	glDeleteTextures(1, &mTexID);
+}
+
 void Texture::bind(GLuint textureUnit)
 {
 	glActiveTexture(GL_TEXTURE0 + textureUnit);

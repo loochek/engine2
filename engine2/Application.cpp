@@ -7,6 +7,26 @@
 
 int Application::init()
 {
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+    mWindow = glfwCreateWindow(800, 600, "engine2", NULL, NULL);
+    if (!mWindow)
+    {
+        std::cout << "[FATAL] Failed to create GLFW window" << std::endl;
+        return -1;
+    }
+
+    glfwMakeContextCurrent(mWindow);
+
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    {
+        std::cout << "[FATAL] Failed to initialize GLAD" << std::endl;
+        return -1;
+    }
+
     EventDispatcher::getInstance().subscribe(this, &Application::onApplicationTerminateEvent);
     EventDispatcher::getInstance().subscribe(this, &Application::onKeyPressed);
 
@@ -18,8 +38,7 @@ int Application::init()
 
     mRenderSystem = objectController.registerSystem<RenderSystem>();
     objectController.setSystemRequirement<RenderSystem, RenderableComponent>(true);
-    mWindow = mRenderSystem->init();
-    if (!mWindow)
+    if (mRenderSystem->init())
         return -1;
 
     mInputSystem = objectController.registerSystem<InputSystem>();
@@ -138,7 +157,6 @@ int Application::init()
         objectController.addComponent(ent, TransformComponent());
         objectController.getComponent<TransformComponent>(ent).translation = cubePositions[i];
         objectController.getComponent<TransformComponent>(ent).rotationAxis = glm::vec3(1.0f, 1.0f, 1.0f);
-        
     }
     return 0;
 }
@@ -155,10 +173,17 @@ int Application::run()
     auto lastTime = clock::now();
     while (!mShouldClose)
     {
-        auto elapsedTime = std::chrono::duration_cast<std::chrono::nanoseconds>(clock::now() - lastTime);
+        GLfloat elapsedTime = std::chrono::duration_cast<std::chrono::nanoseconds>(clock::now() - lastTime).count() / 1e9;
         lastTime = clock::now();
-        mInputSystem->update(elapsedTime.count() / 1e9);
-        mRenderSystem->update(elapsedTime.count() / 1e9);
+
+        mInputSystem->update(elapsedTime);
+        mRenderSystem->update(elapsedTime);
+
+        glfwSwapBuffers(mWindow);
+        glfwPollEvents();
+
+        if (glfwWindowShouldClose(mWindow))
+            mShouldClose = true;
     }
     terminate();
 	return 0;
@@ -167,14 +192,16 @@ int Application::run()
 void Application::terminate()
 {
     mRenderSystem->shutdown();
+    glfwTerminate();
 }
 
-void Application::onApplicationTerminateEvent(ApplicationTerminateEvent* event)
+void Application::onApplicationTerminateEvent(const ApplicationTerminateEvent& event)
 {
     mShouldClose = true;
 }
 
-void Application::onKeyPressed(KeyPressedEvent* event)
+void Application::onKeyPressed(const KeyPressedEvent& event)
 {
-    EventDispatcher::getInstance().emit(new ApplicationTerminateEvent());
+    if (event.key == GLFW_KEY_ESCAPE)
+        EventDispatcher::getInstance().emit(ApplicationTerminateEvent());
 }

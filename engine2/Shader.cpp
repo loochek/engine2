@@ -1,6 +1,11 @@
 #include "Shader.h"
 #include <glm/gtc/type_ptr.hpp>
 
+Shader::~Shader()
+{
+	glDeleteProgram(this->program);
+}
+
 Shader::Shader(Token, const std::string& vertexPath, const std::string& fragmentPath)
 {
 	std::ifstream vShaderFin;

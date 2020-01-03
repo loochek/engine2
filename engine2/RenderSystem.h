@@ -10,11 +10,10 @@
 class RenderSystem : public System
 {
 public:
-	GLFWwindow* init();
+	int init();
 	void update(GLfloat elapsedTime);
 	void shutdown();
 
 private:
-	GLFWwindow* mWindow;
 	Texture* texture;
 };

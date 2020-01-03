@@ -5,37 +5,15 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "ResourceManager.h"
 
-GLFWwindow* RenderSystem::init()
+int RenderSystem::init()
 {
-    glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-    mWindow = glfwCreateWindow(800, 600, "engine2", NULL, NULL);
-    if (!mWindow)
-    {
-        std::cout << "[RenderSystem] Failed to create GLFW window" << std::endl;
-        return nullptr;
-    }
-
-    glfwMakeContextCurrent(mWindow);
-
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
-        std::cout << "[RenderSystem] Failed to initialize GLAD" << std::endl;
-        return nullptr;
-    }
-
     glEnable(GL_DEPTH_TEST);
     texture = new Texture("textures/emo.jpg");
-    return mWindow;
+    return 0;
 }
 
 void RenderSystem::update(GLfloat elapsedTime)
 {
-    if (glfwWindowShouldClose(mWindow))
-        EventDispatcher::getInstance().emit(new ApplicationTerminateEvent());
 
     //std::cout << "FPS: " << 1.f / elapsedTime << std::endl;
     ObjectController::getInstance().getComponent<TransformComponent>(0).rotationAngle += glm::radians(100.f * elapsedTime);
@@ -67,12 +45,8 @@ void RenderSystem::update(GLfloat elapsedTime)
     }
 
     Texture::unbind(0);
-
-    glfwSwapBuffers(mWindow);
-    glfwPollEvents();
 }
 
 void RenderSystem::shutdown()
 {
-    glfwTerminate();
 }
