@@ -18,3 +18,11 @@ struct TransformComponent
 	GLfloat rotationAngle = 0.0f;
 	glm::vec3 scale{ 1.0f };
 };
+
+struct CameraComponent
+{
+	GLfloat yaw = 0.0f;
+	GLfloat pitch = 0.0f;
+};
+
+struct CameraControlComponent {};

@@ -1,14 +1,18 @@
 #pragma once
 
+#include <array>
+#include <glad/glad.h>
+
 struct Event {};
 struct ApplicationTerminateEvent : public Event {};
-struct KeyPressedEvent : public Event
+struct KeyboardStateBroadcastEvent : public Event
 {
-	KeyPressedEvent(int key) : key(key) {}
-	int key;
+	KeyboardStateBroadcastEvent(const std::array<bool, 5>& keyboardState) : keyboardState(keyboardState) {}
+	const std::array<bool, 5> keyboardState;
 };
-struct KeyReleasedEvent : public Event
+struct MouseMovedEvent : public Event
 {
-	KeyReleasedEvent(int key) : key(key) {}
-	int key;
+	MouseMovedEvent(const GLfloat xOffset, const GLfloat yOffset) : xOffset(xOffset), yOffset(yOffset) {}
+	const GLfloat xOffset;
+	const GLfloat yOffset;
 };

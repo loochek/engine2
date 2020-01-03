@@ -161,6 +161,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="CameraControlSystem.cpp" />
     <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="EventDispatcher.cpp" />
     <ClCompile Include="glad.c" />
@@ -174,6 +175,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="CameraControlSystem.h" />
     <ClInclude Include="ComponentManager.h" />
     <ClInclude Include="ComponentStore.h" />
     <ClInclude Include="Entity.h" />

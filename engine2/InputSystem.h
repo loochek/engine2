@@ -14,7 +14,16 @@ public:
 	void update(GLfloat elapsedTime);
 	void shutdown();
 
+	friend void glfwKeyCallback(GLFWwindow*, int, int, int, int);
+	friend void glfwMouseCallback(GLFWwindow*, double, double);
+
 private:
 	GLFWwindow* mWindow;
-	std::array<bool, 5> mKeyStates;
+	// this is weird
+	static std::array<bool, 5> mKeyboardState;
+	static std::array<bool, 5> mKeyboardStateOld;
+	static GLfloat mMouseX;
+	static GLfloat mMouseXOld;
+	static GLfloat mMouseY;
+	static GLfloat mMouseYOld;
 };

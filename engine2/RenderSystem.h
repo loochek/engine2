@@ -13,7 +13,9 @@ public:
 	int init();
 	void update(GLfloat elapsedTime);
 	void shutdown();
+	void setCamera(Entity camera);
 
 private:
 	Texture* texture;
+	Entity mCurrentCamera{ MAX_ENTITIES };
 };

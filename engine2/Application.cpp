@@ -28,13 +28,15 @@ int Application::init()
     }
 
     EventDispatcher::getInstance().subscribe(this, &Application::onApplicationTerminateEvent);
-    EventDispatcher::getInstance().subscribe(this, &Application::onKeyPressed);
+    EventDispatcher::getInstance().subscribe(this, &Application::onKeyboardStateBroadcastEvent);
 
     ObjectController& objectController = ObjectController::getInstance();
 
     objectController.registerComponent<MeshComponent>();
     objectController.registerComponent<RenderableComponent>();
     objectController.registerComponent<TransformComponent>();
+    objectController.registerComponent<CameraComponent>();
+    objectController.registerComponent<CameraControlComponent>();
 
     mRenderSystem = objectController.registerSystem<RenderSystem>();
     objectController.setSystemRequirement<RenderSystem, RenderableComponent>(true);
@@ -42,8 +44,14 @@ int Application::init()
         return -1;
 
     mInputSystem = objectController.registerSystem<InputSystem>();
-
     if (mInputSystem->init(mWindow))
+        return -1;
+
+    mCameraControlSystem = objectController.registerSystem<CameraControlSystem>();
+    objectController.setSystemRequirement<CameraControlSystem, TransformComponent>(true);
+    objectController.setSystemRequirement<CameraControlSystem, CameraComponent>(true);
+    objectController.setSystemRequirement<CameraControlSystem, CameraControlComponent>(true);
+    if (mCameraControlSystem->init())
         return -1;
 
     std::vector<glm::vec3> vertices = {
@@ -158,6 +166,13 @@ int Application::init()
         objectController.getComponent<TransformComponent>(ent).translation = cubePositions[i];
         objectController.getComponent<TransformComponent>(ent).rotationAxis = glm::vec3(1.0f, 1.0f, 1.0f);
     }
+
+    Entity camera = objectController.createEntity();
+    objectController.addComponent(camera, TransformComponent());
+    objectController.getComponent<TransformComponent>(camera).translation = glm::vec3(0.0f, 0.0f, 3.0f);
+    objectController.addComponent(camera, CameraComponent());
+    objectController.addComponent(camera, CameraControlComponent());
+    mRenderSystem->setCamera(camera);
     return 0;
 }
 
@@ -177,6 +192,7 @@ int Application::run()
         lastTime = clock::now();
 
         mInputSystem->update(elapsedTime);
+        mCameraControlSystem->update(elapsedTime);
         mRenderSystem->update(elapsedTime);
 
         glfwSwapBuffers(mWindow);
@@ -200,8 +216,9 @@ void Application::onApplicationTerminateEvent(const ApplicationTerminateEvent& e
     mShouldClose = true;
 }
 
-void Application::onKeyPressed(const KeyPressedEvent& event)
+void Application::onKeyboardStateBroadcastEvent(const KeyboardStateBroadcastEvent& event)
 {
-    if (event.key == GLFW_KEY_ESCAPE)
+    std::cout << 'a';
+    if (event.keyboardState[0])
         EventDispatcher::getInstance().emit(ApplicationTerminateEvent());
 }
