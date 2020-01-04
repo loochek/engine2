@@ -209,12 +209,14 @@ int Application::run()
         GLfloat elapsedTime = std::chrono::duration_cast<std::chrono::nanoseconds>(clock::now() - lastTime).count() / 1e9;
         lastTime = clock::now();
 
+        //all systems is able to draw gui
+        mGUISystem->startFrame();
         mInputSystem->update(elapsedTime);
         mCameraControlSystem->update(elapsedTime);
         ObjectController::getInstance().getComponent<TransformComponent>(0).rotation.x += glm::radians(100.f * elapsedTime);
         ObjectController::getInstance().getComponent<TransformComponent>(0).rotation.y += glm::radians(100.f * elapsedTime);
         mRenderSystem->update(elapsedTime);
-        mGUISystem->update(elapsedTime);
+        mGUISystem->endFrame();
 
         glfwSwapBuffers(mWindow);
         if (glfwWindowShouldClose(mWindow))

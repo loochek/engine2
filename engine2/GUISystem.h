@@ -8,7 +8,8 @@ class GUISystem : public System
 {
 public:
 	int init(GLFWwindow* window);
-	void update(GLfloat elapsedTime);
+	void startFrame();
+	void endFrame();
 	void shutdown();
 
 private:

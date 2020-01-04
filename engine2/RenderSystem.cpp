@@ -5,6 +5,8 @@
 #include <glm/gtx/euler_angles.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include "ResourceManager.h"
+#include "imgui.h"
+#include "imgui_internal.h"
 
 int RenderSystem::init()
 {
@@ -16,14 +18,42 @@ int RenderSystem::init()
 
 void RenderSystem::update(GLfloat elapsedTime)
 {
-
-    //std::cout << "FPS: " << 1.f / elapsedTime << std::endl;
     glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     texture->bind(0);
 
     auto& objectController = ObjectController::getInstance();
+
+    glm::mat4 view(1.0f);
+    glm::mat4 projection = glm::perspective(45.0f, static_cast<GLfloat>(mWindowWidth) / static_cast<GLfloat>(mWindowHeight), 0.1f, 100.0f);
+    // setup camera
+    if (mCurrentCamera != MAX_ENTITIES)
+    {
+        CameraComponent& camera = objectController.getComponent<CameraComponent>(mCurrentCamera);
+        glm::vec3 cameraPos(0.0f);
+        if (objectController.hasComponent<TransformComponent>(mCurrentCamera))
+            cameraPos = objectController.getComponent<TransformComponent>(mCurrentCamera).translation;
+        glm::vec3 cameraFront;
+        cameraFront.x = cos(glm::radians(camera.pitch)) * cos(glm::radians(camera.yaw));
+        cameraFront.y = sin(glm::radians(camera.pitch));
+        cameraFront.z = cos(glm::radians(camera.pitch)) * sin(glm::radians(camera.yaw));
+        cameraFront = glm::normalize(cameraFront);
+        view = glm::lookAt(cameraPos, cameraPos + cameraFront, glm::vec3(0.0f, 1.0f, 0.0f));
+        projection = glm::perspective(camera.fov, static_cast<GLfloat>(mWindowWidth) / static_cast<GLfloat>(mWindowHeight), camera.nearClipPlane, camera.farClipPlane);
+       
+        ImGui::SetNextWindowPos(ImVec2(10, 10));
+        ImGui::SetNextWindowBgAlpha(0.35f);
+        ImGui::Begin("Info", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav);
+        ImGui::Text("Camera position: %f %f %f\nCamera pitch: %f\nCamera yaw: %f", cameraPos.x, cameraPos.y, cameraPos.z, camera.pitch, camera.yaw);
+        ImGui::End();
+    }
+
+    ImGui::SetNextWindowPos(ImVec2(10, 70));
+    ImGui::SetNextWindowBgAlpha(0.35f);
+    ImGui::Begin("Example: Simple overlay", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav);
+    ImGui::Text("FPS: %f", 1.f / elapsedTime);
+    ImGui::End();
 
     for (auto i : mEntities)
     {
@@ -36,23 +66,6 @@ void RenderSystem::update(GLfloat elapsedTime)
             trans = glm::translate(trans, transform.translation);
         }
 
-        glm::mat4 view(1.0f);
-        glm::mat4 projection = glm::perspective(45.0f, static_cast<GLfloat>(mWindowWidth) / static_cast<GLfloat>(mWindowHeight), 0.1f, 100.0f);
-        // setup camera
-        if (mCurrentCamera != MAX_ENTITIES)
-        {
-            CameraComponent& camera = objectController.getComponent<CameraComponent>(mCurrentCamera);
-            glm::vec3 cameraPos(0.0f);
-            if (objectController.hasComponent<TransformComponent>(mCurrentCamera))
-                cameraPos = objectController.getComponent<TransformComponent>(mCurrentCamera).translation;
-            glm::vec3 cameraFront;
-            cameraFront.x = cos(glm::radians(camera.pitch)) * cos(glm::radians(camera.yaw));
-            cameraFront.y = sin(glm::radians(camera.pitch));
-            cameraFront.z = cos(glm::radians(camera.pitch)) * sin(glm::radians(camera.yaw));
-            cameraFront = glm::normalize(cameraFront);
-            view = glm::lookAt(cameraPos, cameraPos + cameraFront, glm::vec3(0.0f, 1.0f, 0.0f));
-            projection = glm::perspective(camera.fov, static_cast<GLfloat>(mWindowWidth) / static_cast<GLfloat>(mWindowHeight), camera.nearClipPlane, camera.farClipPlane);
-        }
         auto shader = ResourceManager::getInstance().getShader("shader");
         shader->bind();
         shader->setMat4f("transform", trans);

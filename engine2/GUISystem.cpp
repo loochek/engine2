@@ -14,14 +14,15 @@ int GUISystem::init(GLFWwindow* window)
 	return 0;
 }
 
-void GUISystem::update(GLfloat elapsedTime)
+void GUISystem::startFrame()
 {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
+}
 
-    // gui here!
-
+void GUISystem::endFrame()
+{
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }

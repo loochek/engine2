@@ -20,6 +20,12 @@ void CameraControlSystem::update(GLfloat elapsedTime)
 		
 		camera.pitch += mMouseYOffset * 0.3;
 		camera.yaw += mMouseXOffset * 0.3;
+
+		if (camera.yaw > 360.0f)
+			camera.yaw -= 360.0f;
+		if (camera.yaw < 0)
+			camera.yaw += 360.0f;
+
 		if (camera.pitch > 89.0f)
 			camera.pitch = 89.0f;
 		if (camera.pitch < -89.0f)
