@@ -18,4 +18,7 @@ public:
 private:
 	Texture* texture;
 	Entity mCurrentCamera{ MAX_ENTITIES };
+	int mWindowWidth = 0.0f;
+	int mWindowHeight = 1.0f;
+	void onFramebufferResizeEvent(const FramebufferResizeEvent& event);
 };

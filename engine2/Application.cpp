@@ -5,8 +5,14 @@
 #include <vector>
 #include "windows.h"
 
+void framebufferSizeCallback(GLFWwindow* window, int width, int height)
+{
+    EventDispatcher::getInstance().emit(FramebufferResizeEvent(width, height));
+}
+
 int Application::init()
 {
+    // create window, init OGL
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -27,8 +33,13 @@ int Application::init()
         return -1;
     }
 
+    glfwSetFramebufferSizeCallback(mWindow, framebufferSizeCallback);
+
+    //subscribe to events
     EventDispatcher::getInstance().subscribe(this, &Application::onApplicationTerminateEvent);
     EventDispatcher::getInstance().subscribe(this, &Application::onKeyboardStateBroadcastEvent);
+
+    //init ECS
 
     ObjectController& objectController = ObjectController::getInstance();
 
@@ -54,6 +65,7 @@ int Application::init()
     if (mCameraControlSystem->init())
         return -1;
 
+    // init world
     std::vector<glm::vec3> vertices = {
     {-0.5f, -0.5f, -0.5f},
     {0.5f, -0.5f, -0.5f},
@@ -164,15 +176,17 @@ int Application::init()
         objectController.getComponent<MeshComponent>(ent).cMesh = mesh;
         objectController.addComponent(ent, TransformComponent());
         objectController.getComponent<TransformComponent>(ent).translation = cubePositions[i];
-        objectController.getComponent<TransformComponent>(ent).rotationAxis = glm::vec3(1.0f, 1.0f, 1.0f);
     }
 
     Entity camera = objectController.createEntity();
     objectController.addComponent(camera, TransformComponent());
-    objectController.getComponent<TransformComponent>(camera).translation = glm::vec3(0.0f, 0.0f, 3.0f);
     objectController.addComponent(camera, CameraComponent());
     objectController.addComponent(camera, CameraControlComponent());
     mRenderSystem->setCamera(camera);
+
+    // hack
+    EventDispatcher::getInstance().emit(FramebufferResizeEvent(800, 600));
+    
     return 0;
 }
 
@@ -193,6 +207,8 @@ int Application::run()
 
         mInputSystem->update(elapsedTime);
         mCameraControlSystem->update(elapsedTime);
+        ObjectController::getInstance().getComponent<TransformComponent>(0).rotation.x += glm::radians(100.f * elapsedTime);
+        ObjectController::getInstance().getComponent<TransformComponent>(0).rotation.y += glm::radians(100.f * elapsedTime);
         mRenderSystem->update(elapsedTime);
 
         glfwSwapBuffers(mWindow);
@@ -218,7 +234,6 @@ void Application::onApplicationTerminateEvent(const ApplicationTerminateEvent& e
 
 void Application::onKeyboardStateBroadcastEvent(const KeyboardStateBroadcastEvent& event)
 {
-    std::cout << 'a';
     if (event.keyboardState[0])
         EventDispatcher::getInstance().emit(ApplicationTerminateEvent());
 }

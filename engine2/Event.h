@@ -16,3 +16,9 @@ struct MouseMovedEvent : public Event
 	const GLfloat xOffset;
 	const GLfloat yOffset;
 };
+struct FramebufferResizeEvent : public Event
+{
+	FramebufferResizeEvent(const int width, const int height) : width(width), height(height) {}
+	int width;
+	int height;
+};
