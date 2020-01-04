@@ -1,7 +1,8 @@
 #include "InputSystem.h"
+#include <iostream>
 
-std::array<bool, 5> InputSystem::mKeyboardState;
-std::array<bool, 5> InputSystem::mKeyboardStateOld;
+std::array<bool, 6> InputSystem::mKeyboardState;
+std::array<bool, 6> InputSystem::mKeyboardStateOld;
 GLfloat InputSystem::mMouseX;
 GLfloat InputSystem::mMouseY;
 GLfloat InputSystem::mMouseXOld;
@@ -10,8 +11,8 @@ GLfloat InputSystem::mMouseYOld;
 // this is weird
 void glfwKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	int keys[] = { GLFW_KEY_ESCAPE, GLFW_KEY_W, GLFW_KEY_A, GLFW_KEY_S, GLFW_KEY_D };
-	for (int i = 0; i < 5; i++)
+	int keys[] = { GLFW_KEY_ESCAPE, GLFW_KEY_W, GLFW_KEY_A, GLFW_KEY_S, GLFW_KEY_D, GLFW_KEY_C };
+	for (int i = 0; i < 6; i++)
 	{
 		if (key == keys[i])
 		{
@@ -35,7 +36,6 @@ int InputSystem::init(GLFWwindow* window)
 	mWindow = window;
 	glfwSetKeyCallback(mWindow, glfwKeyCallback);
 	glfwSetCursorPosCallback(mWindow, glfwMouseCallback);
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	return 0;
 }
 
@@ -43,14 +43,26 @@ void InputSystem::update(GLfloat elapsedTime)
 {
 	if (mKeyboardState != mKeyboardStateOld)
 	{
-		EventDispatcher::getInstance().emit(KeyboardStateBroadcastEvent(mKeyboardState));
+		if (!mDetatched)
+			EventDispatcher::getInstance().emit(KeyboardStateBroadcastEvent(mKeyboardState));
 		mKeyboardStateOld = mKeyboardState;
+	}
+	if (mKeyboardState[5])
+	{
+		mDetatched = true;
+		glfwSetInputMode(mWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+	}
+	else
+	{
+		mDetatched = false;
+		glfwSetInputMode(mWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	}
 	GLfloat xOffset = mMouseX - mMouseXOld;
 	GLfloat yOffset = mMouseYOld - mMouseY;
 	mMouseXOld = mMouseX;
 	mMouseYOld = mMouseY;
-	EventDispatcher::getInstance().emit(MouseMovedEvent(xOffset, yOffset));
+	if (!mDetatched)
+		EventDispatcher::getInstance().emit(MouseMovedEvent(xOffset, yOffset));	
 }
 
 void InputSystem::shutdown()

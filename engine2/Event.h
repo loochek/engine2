@@ -7,8 +7,8 @@ struct Event {};
 struct ApplicationTerminateEvent : public Event {};
 struct KeyboardStateBroadcastEvent : public Event
 {
-	KeyboardStateBroadcastEvent(const std::array<bool, 5>& keyboardState) : keyboardState(keyboardState) {}
-	const std::array<bool, 5> keyboardState;
+	KeyboardStateBroadcastEvent(const std::array<bool, 6>& keyboardState) : keyboardState(keyboardState) {}
+	const std::array<bool, 6> keyboardState;
 };
 struct MouseMovedEvent : public Event
 {

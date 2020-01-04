@@ -54,6 +54,10 @@ int Application::init()
     if (mRenderSystem->init())
         return -1;
 
+    mGUISystem = objectController.registerSystem<GUISystem>();
+    if (mGUISystem->init(mWindow))
+        return -1;
+
     mInputSystem = objectController.registerSystem<InputSystem>();
     if (mInputSystem->init(mWindow))
         return -1;
@@ -183,10 +187,9 @@ int Application::init()
     objectController.addComponent(camera, CameraComponent());
     objectController.addComponent(camera, CameraControlComponent());
     mRenderSystem->setCamera(camera);
-
     // hack
     EventDispatcher::getInstance().emit(FramebufferResizeEvent(800, 600));
-    
+
     return 0;
 }
 
@@ -202,6 +205,7 @@ int Application::run()
     auto lastTime = clock::now();
     while (!mShouldClose)
     {
+        glfwPollEvents();
         GLfloat elapsedTime = std::chrono::duration_cast<std::chrono::nanoseconds>(clock::now() - lastTime).count() / 1e9;
         lastTime = clock::now();
 
@@ -210,10 +214,9 @@ int Application::run()
         ObjectController::getInstance().getComponent<TransformComponent>(0).rotation.x += glm::radians(100.f * elapsedTime);
         ObjectController::getInstance().getComponent<TransformComponent>(0).rotation.y += glm::radians(100.f * elapsedTime);
         mRenderSystem->update(elapsedTime);
+        mGUISystem->update(elapsedTime);
 
         glfwSwapBuffers(mWindow);
-        glfwPollEvents();
-
         if (glfwWindowShouldClose(mWindow))
             mShouldClose = true;
     }
@@ -223,6 +226,9 @@ int Application::run()
 
 void Application::terminate()
 {
+    mCameraControlSystem->shutdown();
+    mInputSystem->shutdown();
+    mGUISystem->shutdown();
     mRenderSystem->shutdown();
     glfwTerminate();
 }

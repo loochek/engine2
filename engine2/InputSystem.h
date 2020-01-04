@@ -20,10 +20,11 @@ public:
 private:
 	GLFWwindow* mWindow;
 	// this is weird
-	static std::array<bool, 5> mKeyboardState;
-	static std::array<bool, 5> mKeyboardStateOld;
+	static std::array<bool, 6> mKeyboardState;
+	static std::array<bool, 6> mKeyboardStateOld;
 	static GLfloat mMouseX;
 	static GLfloat mMouseXOld;
 	static GLfloat mMouseY;
 	static GLfloat mMouseYOld;
+	bool mDetatched = false;
 };

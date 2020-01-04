@@ -37,7 +37,7 @@ void RenderSystem::update(GLfloat elapsedTime)
         }
 
         glm::mat4 view(1.0f);
-        glm::mat4 projection = glm::perspective(45.0f, static_cast<GLfloat>(mWindowWidth / mWindowHeight), 0.1f, 100.0f);
+        glm::mat4 projection = glm::perspective(45.0f, static_cast<GLfloat>(mWindowWidth) / static_cast<GLfloat>(mWindowHeight), 0.1f, 100.0f);
         // setup camera
         if (mCurrentCamera != MAX_ENTITIES)
         {
@@ -51,7 +51,7 @@ void RenderSystem::update(GLfloat elapsedTime)
             cameraFront.z = cos(glm::radians(camera.pitch)) * sin(glm::radians(camera.yaw));
             cameraFront = glm::normalize(cameraFront);
             view = glm::lookAt(cameraPos, cameraPos + cameraFront, glm::vec3(0.0f, 1.0f, 0.0f));
-            projection = glm::perspective(camera.fov, static_cast<GLfloat>(mWindowWidth / mWindowHeight), camera.nearClipPlane, camera.farClipPlane);
+            projection = glm::perspective(camera.fov, static_cast<GLfloat>(mWindowWidth) / static_cast<GLfloat>(mWindowHeight), camera.nearClipPlane, camera.farClipPlane);
         }
         auto shader = ResourceManager::getInstance().getShader("shader");
         shader->bind();

@@ -13,7 +13,7 @@ public:
 	void update(GLfloat elapsedTime);
 	void shutdown();
 private:
-	std::array<bool, 5> mKeys;
+	std::array<bool, 6> mKeys;
 	GLfloat mMouseXOffset;
 	GLfloat mMouseYOffset;
 	void onKeyboardStateBroadcastEvent(const KeyboardStateBroadcastEvent& event);

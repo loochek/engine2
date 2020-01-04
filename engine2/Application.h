@@ -5,6 +5,7 @@
 #include "RenderSystem.h"
 #include "InputSystem.h"
 #include "CameraControlSystem.h"
+#include "GUISystem.h"
 #include "Components.h"
 
 class Application
@@ -17,6 +18,7 @@ public:
 private:
 	GLFWwindow* mWindow;
 	std::shared_ptr<RenderSystem> mRenderSystem;
+	std::shared_ptr<GUISystem> mGUISystem;
 	std::shared_ptr<InputSystem> mInputSystem;
 	std::shared_ptr<CameraControlSystem> mCameraControlSystem;
 	bool mShouldClose = false;
