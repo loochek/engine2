@@ -8,6 +8,9 @@
 class ObjectController
 {
 public:
+	ObjectController(const ObjectController&) = delete;
+	ObjectController& operator=(const ObjectController&) = delete;
+
 	static ObjectController& getInstance()
 	{
 		static ObjectController singleton;
@@ -83,6 +86,9 @@ public:
 	}
 
 private:
+	ObjectController() {}
+	~ObjectController() {}
+
 	EntityManager mEntityManager;
 	ComponentManager mComponentManager;
 	SystemManager mSystemManager;
@@ -92,9 +98,4 @@ private:
 	{
 		mSystemManager.setSignature(signature);
 	}
-
-	ObjectController() {}                                      // Private constructor
-	~ObjectController() {}
-	ObjectController(const ObjectController&);                 // Prevent copy-construction
-	ObjectController& operator=(const ObjectController&);      // Prevent assignment
 };

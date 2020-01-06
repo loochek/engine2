@@ -45,6 +45,9 @@ typedef std::list<HandlerFunctionBase*> HandlerList;
 class EventDispatcher
 {
 public:
+	EventDispatcher(const EventDispatcher&) = delete;
+	EventDispatcher& operator=(const EventDispatcher&) = delete;
+
 	static EventDispatcher& getInstance()
 	{
 		static EventDispatcher singleton;
@@ -78,7 +81,7 @@ public:
 private:
 	std::map<std::type_index, std::list<HandlerFunctionBase*>*> mSubscriptions;
 
-	EventDispatcher() {}                                      // Private constructor
+	EventDispatcher() {}
 	~EventDispatcher()
 	{
 		for (auto events : mSubscriptions)
@@ -89,6 +92,4 @@ private:
 			delete events.second;
 		}
 	}
-	EventDispatcher(const EventDispatcher&);                 // Prevent copy-construction
-	EventDispatcher& operator=(const EventDispatcher&);      // Prevent assignment
 };

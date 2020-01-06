@@ -9,6 +9,9 @@
 class ResourceManager
 {
 public:
+	ResourceManager(const ResourceManager&) = delete;
+	ResourceManager& operator=(const ResourceManager&) = delete;
+
 	static ResourceManager& getInstance();
 
 	std::shared_ptr<Shader> getShader(const std::string& name);
@@ -17,11 +20,8 @@ public:
 	std::shared_ptr<Model> getModel(const std::string& name);
 
 private:
-	ResourceManager() {}                                     // Private constructor
+	ResourceManager() {}
 	~ResourceManager() {}
-	ResourceManager(const ResourceManager&);                 // Prevent copy-construction
-	ResourceManager& operator=(const ResourceManager&);      // Prevent assignment
-
 	std::unordered_map<std::string, std::shared_ptr<Shader>> mShaders;
 	std::unordered_map<std::string, std::shared_ptr<Material>> mMaterials;
 	std::unordered_map<std::string, std::shared_ptr<Texture>> mTextures;

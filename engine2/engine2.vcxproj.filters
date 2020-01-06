@@ -22,9 +22,6 @@
     <Filter Include="Header Files\Events">
       <UniqueIdentifier>{dfb17182-e6d4-46a4-af4e-7df1a7c84c6e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Events">
-      <UniqueIdentifier>{f318c344-80f5-463c-8cef-99a052a31461}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Systems">
       <UniqueIdentifier>{6eac64d7-69af-414f-bd02-efa433e0305d}</UniqueIdentifier>
     </Filter>
@@ -56,9 +53,6 @@
     </ClCompile>
     <ClCompile Include="Application.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="EventDispatcher.cpp">
-      <Filter>Source Files\Events</Filter>
     </ClCompile>
     <ClCompile Include="Texture.cpp">
       <Filter>Source Files</Filter>
