@@ -3,9 +3,10 @@
 in vec2 TexCoord;
 out vec4 color;
 
-uniform sampler2D ourTexture;
+uniform sampler2D texture_diffuse;
+uniform sampler2D texture_specular;
 
 void main()
 {
-	color = texture(ourTexture, TexCoord);
+	color = texture(texture_diffuse, TexCoord);
 }

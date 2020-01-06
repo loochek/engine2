@@ -2,7 +2,9 @@
 
 #include <unordered_map>
 #include "Shader.h"
-#include "Mesh.h"
+#include "Model.h"
+#include "Texture.h"
+#include "Material.h"
 
 class ResourceManager
 {
@@ -10,8 +12,9 @@ public:
 	static ResourceManager& getInstance();
 
 	std::shared_ptr<Shader> getShader(const std::string& name);
-	// temporarily
-	std::shared_ptr<Mesh> getMesh(const std::string& name);
+	std::shared_ptr<Texture> getTexture(const std::string& name);
+	std::shared_ptr<Material> getMaterial(const std::string& name);
+	std::shared_ptr<Model> getModel(const std::string& name);
 
 private:
 	ResourceManager() {}                                     // Private constructor
@@ -20,5 +23,7 @@ private:
 	ResourceManager& operator=(const ResourceManager&);      // Prevent assignment
 
 	std::unordered_map<std::string, std::shared_ptr<Shader>> mShaders;
-	std::unordered_map<std::string, std::shared_ptr<Mesh>> mMeshes;
+	std::unordered_map<std::string, std::shared_ptr<Material>> mMaterials;
+	std::unordered_map<std::string, std::shared_ptr<Texture>> mTextures;
+	std::unordered_map<std::string, std::shared_ptr<Model>> mModels;
 };

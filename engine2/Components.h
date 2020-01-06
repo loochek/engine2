@@ -2,13 +2,13 @@
 
 #include <vector>
 #include <glm/glm.hpp>
-#include "Mesh.h"
+#include "Model.h"
 
 struct RenderableComponent {};
 
 struct MeshComponent
 {
-	std::shared_ptr<Mesh> cMesh;
+	std::shared_ptr<Model> cModel;
 };
 
 struct TransformComponent

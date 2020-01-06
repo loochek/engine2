@@ -3,7 +3,6 @@
 #include <iostream>
 #include <chrono>
 #include <vector>
-#include "windows.h"
 
 void framebufferSizeCallback(GLFWwindow* window, int width, int height)
 {
@@ -156,31 +155,18 @@ int Application::init()
    {  0.0f, 0.0f},
     {  0.0f, 1.0f}
     };
-    auto mesh = ResourceManager::getInstance().getMesh("texturedCube");
+    /*auto mesh = ResourceManager::getInstance().getMesh("texturedCube");
     mesh->loadPositions(vertices);
     mesh->loadTexCoords(texCoords);
     mesh->bake();
-    glm::vec3 cubePositions[] = {
-  glm::vec3(0.0f,  0.0f,  0.0f),
-  glm::vec3(2.0f,  5.0f, -15.0f),
-  glm::vec3(-1.5f, -2.2f, -2.5f),
-  glm::vec3(-3.8f, -2.0f, -12.3f),
-  glm::vec3(2.4f, -0.4f, -3.5f),
-  glm::vec3(-1.7f,  3.0f, -7.5f),
-  glm::vec3(1.3f, -2.0f, -2.5f),
-  glm::vec3(1.5f,  2.0f, -2.5f),
-  glm::vec3(1.5f,  0.2f, -1.5f),
-  glm::vec3(-1.3f,  1.0f, -1.5f)
-    };
-    for (int i = 0; i < 10; i++)
-    {
-        Entity ent = objectController.createEntity();
-        objectController.addComponent(ent, RenderableComponent());
-        objectController.addComponent(ent, MeshComponent());
-        objectController.getComponent<MeshComponent>(ent).cMesh = mesh;
-        objectController.addComponent(ent, TransformComponent());
-        objectController.getComponent<TransformComponent>(ent).translation = cubePositions[i];
-    }
+    auto diffuseMap = ResourceManager::getInstance().getTexture("emo.jpg");
+    Material mat(diffuseMap);
+    mesh->setMaterial(mat);*/
+    Entity ent = objectController.createEntity();
+    objectController.addComponent(ent, RenderableComponent());
+    objectController.addComponent(ent, MeshComponent());
+    objectController.getComponent<MeshComponent>(ent).cModel = ResourceManager::getInstance().getModel("nanosuit");
+    objectController.addComponent(ent, TransformComponent());
 
     Entity camera = objectController.createEntity();
     objectController.addComponent(camera, TransformComponent());
@@ -189,6 +175,7 @@ int Application::init()
     mRenderSystem->setCamera(camera);
     // hack
     EventDispatcher::getInstance().emit(FramebufferResizeEvent(800, 600));
+
 
     return 0;
 }
@@ -213,8 +200,8 @@ int Application::run()
         mGUISystem->startFrame();
         mInputSystem->update(elapsedTime);
         mCameraControlSystem->update(elapsedTime);
-        ObjectController::getInstance().getComponent<TransformComponent>(0).rotation.x += glm::radians(100.f * elapsedTime);
-        ObjectController::getInstance().getComponent<TransformComponent>(0).rotation.y += glm::radians(100.f * elapsedTime);
+        //ObjectController::getInstance().getComponent<TransformComponent>(0).rotation.x += glm::radians(100.f * elapsedTime);
+        //ObjectController::getInstance().getComponent<TransformComponent>(0).rotation.y += glm::radians(100.f * elapsedTime);
         mRenderSystem->update(elapsedTime);
         mGUISystem->endFrame();
 

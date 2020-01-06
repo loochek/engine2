@@ -1,19 +1,166 @@
 #include "Mesh.h"
 #include <set>
 
-void Mesh::loadPositions(std::vector<glm::vec3>& positions)
+void Mesh::cubify()
+{
+	mPositions = {
+			glm::vec3(-0.5f, -0.5f, -0.5f),
+			glm::vec3(0.5f,  0.5f, -0.5f),
+			glm::vec3(0.5f, -0.5f, -0.5f),
+			glm::vec3(0.5f,  0.5f, -0.5f),
+			glm::vec3(-0.5f, -0.5f, -0.5f),
+			glm::vec3(-0.5f,  0.5f, -0.5f),
+
+			glm::vec3(-0.5f, -0.5f,  0.5f),
+			glm::vec3(0.5f, -0.5f,  0.5f),
+			glm::vec3(0.5f,  0.5f,  0.5f),
+			glm::vec3(0.5f,  0.5f,  0.5f),
+			glm::vec3(-0.5f,  0.5f,  0.5f),
+			glm::vec3(-0.5f, -0.5f,  0.5f),
+
+			glm::vec3(-0.5f,  0.5f,  0.5f),
+			glm::vec3(-0.5f,  0.5f, -0.5f),
+			glm::vec3(-0.5f, -0.5f, -0.5f),
+			glm::vec3(-0.5f, -0.5f, -0.5f),
+			glm::vec3(-0.5f, -0.5f,  0.5f),
+			glm::vec3(-0.5f,  0.5f,  0.5f),
+
+			glm::vec3(0.5f,  0.5f,  0.5f),
+			glm::vec3(0.5f, -0.5f, -0.5f),
+			glm::vec3(0.5f,  0.5f, -0.5f),
+			glm::vec3(0.5f, -0.5f, -0.5f),
+			glm::vec3(0.5f,  0.5f,  0.5f),
+			glm::vec3(0.5f, -0.5f,  0.5f),
+
+			glm::vec3(-0.5f, -0.5f, -0.5f),
+			glm::vec3(0.5f, -0.5f, -0.5f),
+			glm::vec3(0.5f, -0.5f,  0.5f),
+			glm::vec3(0.5f, -0.5f,  0.5f),
+			glm::vec3(-0.5f, -0.5f,  0.5f),
+			glm::vec3(-0.5f, -0.5f, -0.5f),
+
+			glm::vec3(-0.5f,  0.5f, -0.5f),
+			glm::vec3(0.5f,  0.5f,  0.5f),
+			glm::vec3(0.5f,  0.5f, -0.5f),
+			glm::vec3(0.5f,  0.5f,  0.5f),
+			glm::vec3(-0.5f,  0.5f, -0.5f),
+			glm::vec3(-0.5f, 0.5f, 0.5f)
+	};
+	mNormals = {
+		glm::vec3(0.0f,  0.0f, -1.0f),
+		glm::vec3(0.0f,  0.0f, -1.0f),
+		glm::vec3(0.0f,  0.0f, -1.0f),
+		glm::vec3(0.0f,  0.0f, -1.0f),
+		glm::vec3(0.0f,  0.0f, -1.0f),
+		glm::vec3(0.0f,  0.0f, -1.0f),
+
+		glm::vec3(0.0f,  0.0f,  1.0f),
+		glm::vec3(0.0f,  0.0f,  1.0f),
+		glm::vec3(0.0f,  0.0f,  1.0f),
+		glm::vec3(0.0f,  0.0f,  1.0f),
+		glm::vec3(0.0f,  0.0f,  1.0f),
+		glm::vec3(0.0f,  0.0f,  1.0f),
+
+		glm::vec3(-1.0f,  0.0f,  0.0f),
+		glm::vec3(-1.0f,  0.0f,  0.0f),
+		glm::vec3(-1.0f,  0.0f,  0.0f),
+		glm::vec3(-1.0f,  0.0f,  0.0f),
+		glm::vec3(-1.0f,  0.0f,  0.0f),
+		glm::vec3(-1.0f,  0.0f,  0.0f),
+
+		glm::vec3(1.0f,  0.0f,  0.0f),
+		glm::vec3(1.0f,  0.0f,  0.0f),
+		glm::vec3(1.0f,  0.0f,  0.0f),
+		glm::vec3(1.0f,  0.0f,  0.0f),
+		glm::vec3(1.0f,  0.0f,  0.0f),
+		glm::vec3(1.0f,  0.0f,  0.0f),
+
+		glm::vec3(0.0f, -1.0f,  0.0f),
+		glm::vec3(0.0f, -1.0f,  0.0f),
+		glm::vec3(0.0f, -1.0f,  0.0f),
+		glm::vec3(0.0f, -1.0f,  0.0f),
+		glm::vec3(0.0f, -1.0f,  0.0f),
+		glm::vec3(0.0f, -1.0f,  0.0f),
+
+		glm::vec3(0.0f,  1.0f,  0.0f),
+		glm::vec3(0.0f,  1.0f,  0.0f),
+		glm::vec3(0.0f,  1.0f,  0.0f),
+		glm::vec3(0.0f,  1.0f,  0.0f),
+		glm::vec3(0.0f,  1.0f,  0.0f),
+		glm::vec3(0.0f,  1.0f,  0.0f)
+	};
+	mTexCoords = {
+		glm::vec2(0.0f, 0.0f),
+		glm::vec2(1.0f, 1.0f),
+		glm::vec2(1.0f, 0.0f),
+		glm::vec2(1.0f, 1.0f),
+		glm::vec2(0.0f, 0.0f),
+		glm::vec2(0.0f, 1.0f),
+
+		glm::vec2(0.0f, 0.0f),
+		glm::vec2(1.0f, 0.0f),
+		glm::vec2(1.0f, 1.0f),
+		glm::vec2(1.0f, 1.0f),
+		glm::vec2(0.0f, 1.0f),
+		glm::vec2(0.0f, 0.0f),
+
+		glm::vec2(1.0f, 0.0f),
+		glm::vec2(1.0f, 1.0f),
+		glm::vec2(0.0f, 1.0f),
+		glm::vec2(0.0f, 1.0f),
+		glm::vec2(0.0f, 0.0f),
+		glm::vec2(1.0f, 0.0f),
+
+		glm::vec2(1.0f, 0.0f),
+		glm::vec2(0.0f, 1.0f),
+		glm::vec2(1.0f, 1.0f),
+		glm::vec2(0.0f, 1.0f),
+		glm::vec2(1.0f, 0.0f),
+		glm::vec2(0.0f, 0.0f),
+
+		glm::vec2(0.0f, 1.0f),
+		glm::vec2(1.0f, 1.0f),
+		glm::vec2(1.0f, 0.0f),
+		glm::vec2(1.0f, 0.0f),
+		glm::vec2(0.0f, 0.0f),
+		glm::vec2(0.0f, 1.0f),
+
+		glm::vec2(0.0f, 1.0f),
+		glm::vec2(1.0f, 0.0f),
+		glm::vec2(1.0f, 1.0f),
+		glm::vec2(1.0f, 0.0f),
+		glm::vec2(0.0f, 1.0f),
+		glm::vec2(0.0f, 0.0f)
+	};
+	mIndices.resize(36);
+	for (GLuint i = 0; i < 36; i++)
+		mIndices[i] = i;
+	bake();
+}
+
+void Mesh::loadPositions(const std::vector<glm::vec3>& positions)
 {
 	mPositions = positions;
 }
 
-void Mesh::loadTexCoords(std::vector<glm::vec2>& texCoords)
+void Mesh::loadTexCoords(const std::vector<glm::vec2>& texCoords)
 {
 	mTexCoords = texCoords;
 }
 
-void Mesh::loadNormals(std::vector<glm::vec3>& normals)
+void Mesh::loadNormals(const std::vector<glm::vec3>& normals)
 {
 	mNormals = normals;
+}
+
+void Mesh::loadIndices(const std::vector<GLuint>& Indices)
+{
+	mIndices = Indices;
+}
+
+void Mesh::setMaterial(const std::shared_ptr<Material>& material)
+{
+	mMaterial = material;
 }
 
 void Mesh::bake()
@@ -21,63 +168,68 @@ void Mesh::bake()
 	size_t verticesCount = mPositions.size();
 	if (verticesCount == 0)
 		std::cout << "WARNING: Mesh doesn't have vertices!" << std::endl;
+	if (mNormals.size() != verticesCount)
+		std::cout << "WARNING: Normals definition is wrong!" << std::endl;
+	if (mIndices.size() < 3)
+		std::cout << "WARNING: Indices aren't present - nothing to draw!" << std::endl;
 
-	size_t bufferSize = sizeof(glm::vec3) * verticesCount;
+	size_t bufferSize = sizeof(glm::vec3) * verticesCount * 2; // vertices and normals
+
+	// uv mapping is optional
 	bool hasTexCoords = false;
-	bool hasNormals = false;
-
-
 	if (mTexCoords.size() > 0)
 	{
 		bufferSize += sizeof(glm::vec2) * verticesCount;
 		hasTexCoords = true;
 		if (mTexCoords.size() != verticesCount)
-			std::cout << "WARNING: Vertices count in mesh doesn't match!" << std::endl;
-	}
-	if (mNormals.size() > 0)
-	{
-		bufferSize += sizeof(glm::vec3) * verticesCount;
-		hasNormals = true;
-		if (mNormals.size() != verticesCount)
-			std::cout << "WARNING: Vertices count in mesh doesn't match!" << std::endl;
+			std::cout << "WARNING: UV mapping wrong!" << std::endl;
 	}
 
+	// allocate buffer in vram
 	glGenVertexArrays(1, &mVAO);
 	glBindVertexArray(mVAO);
 	glGenBuffers(1, &mVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, mVBO);
 	glBufferData(GL_ARRAY_BUFFER, bufferSize, nullptr, GL_STATIC_DRAW);
 
-
+	// put vertices
 	GLuint offset = 0;
 	glBufferSubData(GL_ARRAY_BUFFER, offset, sizeof(glm::vec3) * verticesCount, mPositions.data());
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (GLvoid*)offset);
 	glEnableVertexAttribArray(0);
 	offset += sizeof(glm::vec3) * verticesCount;
 
+	// put normals
+	glBufferSubData(GL_ARRAY_BUFFER, offset, sizeof(glm::vec3) * verticesCount, mNormals.data());
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (GLvoid*)offset);
+	glEnableVertexAttribArray(1);
+	offset += sizeof(glm::vec3) * verticesCount;
+
+	// put uv mapping is present
 	if (hasTexCoords)
 	{
 		glBufferSubData(GL_ARRAY_BUFFER, offset, sizeof(glm::vec2) * verticesCount, mTexCoords.data());
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), (GLvoid*)offset);
-		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), (GLvoid*)offset);
+		glEnableVertexAttribArray(2);
 		offset += sizeof(glm::vec2) * verticesCount;
 	}
 
-	if (hasNormals)
-	{
-		glBufferSubData(GL_ARRAY_BUFFER, offset, sizeof(glm::vec3) * verticesCount, mTexCoords.data());
-		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (GLvoid*)offset);
-		glEnableVertexAttribArray(2);
-		offset += sizeof(glm::vec3) * verticesCount;
-	}
+	// create IBO
+	glGenBuffers(1, &mIBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * mIndices.size(), mIndices.data(), GL_STATIC_DRAW);
+
 	glBindVertexArray(0);
 }
 
-void Mesh::draw(Shader &shader)
+void Mesh::draw()
 {
-	shader.bind();
+	mMaterial->bind();
 	glBindVertexArray(mVAO);
-	glDrawArrays(GL_TRIANGLES, 0, mPositions.size());
+	if (mIndices.size() > 0)
+		glDrawElements(GL_TRIANGLES, mIndices.size(), GL_UNSIGNED_INT, 0);
+	else
+		glDrawArrays(GL_TRIANGLES, 0, mPositions.size());
 	glBindVertexArray(0);
-	Shader::unbind();
+	Material::unbind();
 }

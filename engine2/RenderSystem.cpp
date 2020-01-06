@@ -5,6 +5,7 @@
 #include <glm/gtx/euler_angles.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include "ResourceManager.h"
+#include "Model.h"
 #include "imgui.h"
 #include "imgui_internal.h"
 
@@ -12,7 +13,6 @@ int RenderSystem::init()
 {
     EventDispatcher::getInstance().subscribe(this, &RenderSystem::onFramebufferResizeEvent);
     glEnable(GL_DEPTH_TEST);
-    texture = new Texture("textures/emo.jpg");
     return 0;
 }
 
@@ -20,8 +20,6 @@ void RenderSystem::update(GLfloat elapsedTime)
 {
     glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    texture->bind(0);
 
     auto& objectController = ObjectController::getInstance();
 
@@ -72,10 +70,9 @@ void RenderSystem::update(GLfloat elapsedTime)
         shader->setMat4f("view", view);
         shader->setMat4f("projection", projection);
         Shader::unbind();
-        ObjectController::getInstance().getComponent<MeshComponent>(i).cMesh->draw(*shader);
+        ObjectController::getInstance().getComponent<MeshComponent>(i).cModel->draw();
     }
-
-    Texture::unbind(0);
+  
 }
 
 void RenderSystem::shutdown()
