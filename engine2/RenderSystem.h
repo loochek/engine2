@@ -16,8 +16,8 @@ public:
 	void setCamera(Entity camera);
 
 private:
-	Entity mCurrentCamera{ MAX_ENTITIES };
-	int mWindowWidth = 0.0f;
-	int mWindowHeight = 1.0f;
+	Entity mCurrentCamera = MAX_ENTITIES;
+	int mWindowWidth = {};
+	int mWindowHeight = {};
 	void onFramebufferResizeEvent(const FramebufferResizeEvent& event);
 };

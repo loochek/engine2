@@ -18,6 +18,7 @@ public:
 	std::shared_ptr<Texture> getTexture(const std::string& name);
 	std::shared_ptr<Material> getMaterial(const std::string& name);
 	std::shared_ptr<Model> getModel(const std::string& name);
+	std::shared_ptr<Mesh> getCubeMesh();
 
 private:
 	ResourceManager() {}
@@ -26,4 +27,6 @@ private:
 	std::unordered_map<std::string, std::shared_ptr<Material>> mMaterials;
 	std::unordered_map<std::string, std::shared_ptr<Texture>> mTextures;
 	std::unordered_map<std::string, std::shared_ptr<Model>> mModels;
+
+	std::shared_ptr<Mesh> mCubeMesh;
 };

@@ -56,7 +56,7 @@ struct E2mdlMeshEntry
     uint32_t verticesCount;
     uint32_t indicesCount;
     uint8_t flags; // UV present - 1st bit
-    char material[16]; // used material
+    char material[128]; // used material
 };
 #pragma pack (pop)
 

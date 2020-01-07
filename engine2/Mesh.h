@@ -5,8 +5,9 @@
 #include <glm/vec3.hpp>
 #include "Shader.h"
 #include "Material.h"
+#include "Renderable.h"
 
-class Mesh
+class Mesh : public Renderable
 {
 public:
 	Mesh() {};
@@ -17,7 +18,6 @@ public:
 	Mesh(Mesh&&) = default;
 	Mesh& operator=(Mesh&&) = default;
 
-	void cubify();
 	void loadPositions(const std::vector<glm::vec3>& positions);
 	void loadTexCoords(const std::vector<glm::vec2>& texCoords);
 	void loadNormals(const std::vector<glm::vec3>& normals);

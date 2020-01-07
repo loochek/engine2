@@ -70,7 +70,7 @@ void RenderSystem::update(GLfloat elapsedTime)
         shader->setMat4f("view", view);
         shader->setMat4f("projection", projection);
         Shader::unbind();
-        ObjectController::getInstance().getComponent<MeshComponent>(i).cModel->draw();
+        ObjectController::getInstance().getComponent<RenderableComponent>(i).cRenderable->draw();
     }
   
 }

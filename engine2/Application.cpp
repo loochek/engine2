@@ -42,7 +42,6 @@ int Application::init()
 
     ObjectController& objectController = ObjectController::getInstance();
 
-    objectController.registerComponent<MeshComponent>();
     objectController.registerComponent<RenderableComponent>();
     objectController.registerComponent<TransformComponent>();
     objectController.registerComponent<CameraComponent>();
@@ -69,114 +68,37 @@ int Application::init()
         return -1;
 
     // init world
-    std::vector<glm::vec3> vertices = {
-    {-0.5f, -0.5f, -0.5f},
-    {0.5f, -0.5f, -0.5f},
-    { 0.5f,  0.5f, -0.5f},
-   {  0.5f,  0.5f, -0.5f},
-   { -0.5f,  0.5f, -0.5f},
-   { -0.5f, -0.5f, -0.5f},
 
-   { -0.5f, -0.5f,  0.5f},
-   {  0.5f, -0.5f,  0.5f},
-    { 0.5f,  0.5f,  0.5f},
-   {  0.5f,  0.5f,  0.5f},
-   { -0.5f,  0.5f,  0.5f},
-   { -0.5f, -0.5f,  0.5f},
+    Entity j12 = objectController.createEntity();
+    objectController.addComponent(j12, RenderableComponent());
+    objectController.getComponent<RenderableComponent>(j12).cRenderable = ResourceManager::getInstance().getModel("j12");
+    objectController.addComponent(j12, TransformComponent());
+    objectController.getComponent<TransformComponent>(j12).scale = glm::vec3(0.1f, 0.1f, 0.1f);
 
-    {-0.5f,  0.5f,  0.5f},
-   { -0.5f,  0.5f, -0.5f},
-   { -0.5f, -0.5f, -0.5f},
-   { -0.5f, -0.5f, -0.5f},
-   { -0.5f, -0.5f,  0.5f},
-   { -0.5f,  0.5f,  0.5f},
+    Entity nanosuit = objectController.createEntity();
+    objectController.addComponent(nanosuit, RenderableComponent());
+    objectController.getComponent<RenderableComponent>(nanosuit).cRenderable = ResourceManager::getInstance().getModel("nanosuit");
+    objectController.addComponent(nanosuit, TransformComponent());
+    objectController.getComponent<TransformComponent>(nanosuit).translation = glm::vec3(10.0f, 0.0f, 0.0f);
+    objectController.getComponent<TransformComponent>(nanosuit).scale = glm::vec3(0.35f, 0.35f, 0.35f);
 
-    { 0.5f,  0.5f,  0.5f},
-    { 0.5f,  0.5f, -0.5f},
-    { 0.5f, -0.5f, -0.5f},
-    { 0.5f, -0.5f, -0.5f},
-    { 0.5f, -0.5f,  0.5f},
-    { 0.5f,  0.5f,  0.5f},
-
-   { -0.5f, -0.5f, -0.5f},
-   {  0.5f, -0.5f, -0.5f},
-   {  0.5f, -0.5f,  0.5f},
-   {  0.5f, -0.5f,  0.5f},
-   { -0.5f, -0.5f,  0.5f},
-   { -0.5f, -0.5f, -0.5f},
-
-   { -0.5f,  0.5f, -0.5f},
-   {  0.5f,  0.5f, -0.5f},
-    { 0.5f,  0.5f,  0.5f},
-   {  0.5f,  0.5f,  0.5f},
-   { -0.5f,  0.5f,  0.5f},
-   { -0.5f,  0.5f, -0.5f}
-    };
-    std::vector<glm::vec2> texCoords = {
-    {0.0f, 0.0f},
-     {1.0f, 0.0f},
-     { 1.0f, 1.0f},
-     { 1.0f, 1.0f},
-    {0.0f, 1.0f},
-    { 0.0f, 0.0f},
-
-    { 0.0f, 0.0f},
-    { 1.0f, 0.0f},
-     { 1.0f, 1.0f},
-    {  1.0f, 1.0f},
-   {  0.0f, 1.0f},
-    { 0.0f, 0.0f},
-
-    { 1.0f, 0.0f},
- {  1.0f, 1.0f},
-    {  0.0f, 1.0f},
-    {  0.0f, 1.0f},
-    { 0.0f, 0.0f},
-  {  1.0f, 0.0f},
-
-    {  1.0f, 0.0f},
-  {  1.0f, 1.0f},
-    {  0.0f, 1.0f},
-  { 0.0f, 1.0f},
-     {  0.0f, 0.0f},
-    { 1.0f, 0.0f},
-
-    {  0.0f, 1.0f},
-     { 1.0f, 1.0f},
-    { 1.0f, 0.0f},
-    { 1.0f, 0.0f},
-   { 0.0f, 0.0f},
-   {  0.0f, 1.0f},
-
-   {  0.0f, 1.0f},
-   { 1.0f, 1.0f},
-    { 1.0f, 0.0f},
-   {  1.0f, 0.0f},
-   {  0.0f, 0.0f},
-    {  0.0f, 1.0f}
-    };
-    /*auto mesh = ResourceManager::getInstance().getMesh("texturedCube");
-    mesh->loadPositions(vertices);
-    mesh->loadTexCoords(texCoords);
-    mesh->bake();
-    auto diffuseMap = ResourceManager::getInstance().getTexture("emo.jpg");
-    Material mat(diffuseMap);
-    mesh->setMaterial(mat);*/
-    Entity ent = objectController.createEntity();
-    objectController.addComponent(ent, RenderableComponent());
-    objectController.addComponent(ent, MeshComponent());
-    objectController.getComponent<MeshComponent>(ent).cModel = ResourceManager::getInstance().getModel("nanosuit");
-    objectController.addComponent(ent, TransformComponent());
+    Entity cube = objectController.createEntity();
+    objectController.addComponent(cube, RenderableComponent());
+    auto cubeMesh = ResourceManager::getInstance().getCubeMesh();
+    cubeMesh->setMaterial(ResourceManager::getInstance().getMaterial("default"));
+    objectController.getComponent<RenderableComponent>(cube).cRenderable = cubeMesh;
+    objectController.addComponent(cube, TransformComponent());
+    objectController.getComponent<TransformComponent>(cube).translation = glm::vec3(3.0f, 1.0f, 0.0f);
+    objectController.getComponent<TransformComponent>(cube).scale = glm::vec3(3.0f, 3.0f, 3.0f);
 
     Entity camera = objectController.createEntity();
     objectController.addComponent(camera, TransformComponent());
     objectController.addComponent(camera, CameraComponent());
     objectController.addComponent(camera, CameraControlComponent());
     mRenderSystem->setCamera(camera);
+
     // hack
     EventDispatcher::getInstance().emit(FramebufferResizeEvent(800, 600));
-
-
     return 0;
 }
 
@@ -200,8 +122,6 @@ int Application::run()
         mGUISystem->startFrame();
         mInputSystem->update(elapsedTime);
         mCameraControlSystem->update(elapsedTime);
-        //ObjectController::getInstance().getComponent<TransformComponent>(0).rotation.x += glm::radians(100.f * elapsedTime);
-        //ObjectController::getInstance().getComponent<TransformComponent>(0).rotation.y += glm::radians(100.f * elapsedTime);
         mRenderSystem->update(elapsedTime);
         mGUISystem->endFrame();
 

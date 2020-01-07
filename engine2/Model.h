@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include "Renderable.h"
 #include "Shader.h"
 #include "Mesh.h"
 
@@ -22,7 +23,7 @@ struct E2mdlMeshEntry
 	uint32_t verticesCount;
 	uint32_t indicesCount;
 	uint8_t flags; // UV present - 1st bit
-	char material[16]; // used material
+	char material[128]; // used material
 };
 #pragma pack (pop)
 
@@ -41,7 +42,7 @@ mesh data {}
 ...
 */
 
-class Model
+class Model : public Renderable
 {
 public:
 	// the trick to give resoures creation exclusive right to ResourceManager

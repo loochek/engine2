@@ -4,11 +4,9 @@
 #include <glm/glm.hpp>
 #include "Model.h"
 
-struct RenderableComponent {};
-
-struct MeshComponent
+struct RenderableComponent
 {
-	std::shared_ptr<Model> cModel;
+	std::shared_ptr<Renderable> cRenderable;
 };
 
 struct TransformComponent
